@@ -37,12 +37,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v*/registration/**","/api/v1/check-authentication","/api/login")
+                .antMatchers("/api/v*/registration/**","/api/v*/check-authentication","/api/v*/login/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
                 .formLogin();
-        //.loginPage("/api/v1/login");
     }
 
     @Override

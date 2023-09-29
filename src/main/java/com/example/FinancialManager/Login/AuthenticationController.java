@@ -1,10 +1,13 @@
 package com.example.FinancialManager.Login;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +19,12 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/api/login")
+    @PostMapping("/api/v1/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginForm loginForm) {
+        try {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword())
         );
@@ -29,8 +32,17 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-    }
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        } catch (BadCredentialsException ex) {
+            // Handle authentication failure due to bad credentials (incorrect username or password)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password"); // You can customize the error message
+        } catch (AuthenticationException ex) {
+            // Handle other authentication exceptions here if needed
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Authentication failed for an unknown reason"); // Customize the error message
+        }
+}
     @GetMapping("/api/v1/check-authentication")
     public boolean checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
