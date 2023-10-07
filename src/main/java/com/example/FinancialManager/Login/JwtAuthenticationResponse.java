@@ -9,6 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
     private String accessToken;
-
-    // Constructors, getters, and setters
 }

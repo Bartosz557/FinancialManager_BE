@@ -9,19 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProfileFetchDataController {
+public class  ProfileFetchDataController {
 
     @GetMapping("/api/v1/fetchdata")
     public String fetchData()
     {
+        String username = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String username = authentication.getName();
-        String a="";
         if (authentication.getPrincipal() instanceof AppUser) {
             AppUser customUserDetails = (AppUser) authentication.getPrincipal();
-            a = customUserDetails.getFirstName();
+            username = customUserDetails.getFirstName();
         }
-        return username + "data: " + a;
+        return username;
     }
 }

@@ -12,8 +12,6 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Autowired
-    private JwtConfig jwtConfig;
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -30,7 +28,7 @@ public class JwtTokenProvider {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret()) // Use jwtConfig to get the secret
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 }
