@@ -34,13 +34,11 @@ public class AuthenticationController {
 
             return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
         } catch (BadCredentialsException ex) {
-            // Handle authentication failure due to bad credentials (incorrect username or password)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid username or password"); // You can customize the error message
+                    .body("Invalid username or password");
         } catch (AuthenticationException ex) {
-            // Handle other authentication exceptions here if needed
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Authentication failed for an unknown reason"); // Customize the error message
+                    .body("Authentication failed for an unknown reason");
         }
 }
     @GetMapping("/api/v1/check-authentication")
