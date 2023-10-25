@@ -1,15 +1,15 @@
-package com.example.FinancialManager.User;
+package com.example.FinancialManager.user.appUser;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.FinancialManager.user.accountDetails.AccountDetails;
+import com.example.FinancialManager.user.scheduledTransactions.RecurringExpenses;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,8 +29,8 @@ public class AppUser implements UserDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long id;
-    private String firstName;
+    private Long user_id;
+    private String username;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -38,8 +38,14 @@ public class AppUser implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    public AppUser(String firstName, String email, String password, AppUserRole appUserRole) {
-        this.firstName = firstName;
+    @OneToOne(mappedBy = "appUser")
+    private AccountDetails accountDetails;
+
+    @OneToMany(mappedBy = "appUser")
+    private List<RecurringExpenses> recurringExpensesList;
+
+    public AppUser(String username, String email, String password, AppUserRole appUserRole) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
@@ -53,13 +59,8 @@ public class AppUser implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

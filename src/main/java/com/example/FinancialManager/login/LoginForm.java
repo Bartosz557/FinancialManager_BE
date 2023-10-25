@@ -1,4 +1,4 @@
-package com.example.FinancialManager.Login;
+package com.example.FinancialManager.login;
 
 import lombok.Getter;
 import lombok.Setter;

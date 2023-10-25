@@ -10,7 +10,7 @@ server:
 spring:
   datasource:
     password: demodb123
-    url: jdbc:postgresql://localhost:5432/registration
+    url: jdbc:postgresql://localhost:5432/fmanager
     username: postgres
   jpa:
     hibernate:

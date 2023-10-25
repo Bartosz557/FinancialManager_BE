@@ -1,8 +1,8 @@
 package com.example.FinancialManager.registration;
 
-import com.example.FinancialManager.User.AppUser;
-import com.example.FinancialManager.User.AppUserRole;
-import com.example.FinancialManager.User.AppUserService;
+import com.example.FinancialManager.user.appUser.AppUser;
+import com.example.FinancialManager.user.appUser.AppUserRole;
+import com.example.FinancialManager.user.appUser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class RegistrationService {
         }
         return appUserService.signUpUser(
                 new AppUser(
-                        request.getFirstName(),
+                        request.getUsername(),
                         request.getEmail(),
                         request.getPassword(),
                         AppUserRole.USER

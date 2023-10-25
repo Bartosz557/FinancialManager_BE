@@ -1,4 +1,4 @@
-package com.example.FinancialManager.Login;
+package com.example.FinancialManager.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

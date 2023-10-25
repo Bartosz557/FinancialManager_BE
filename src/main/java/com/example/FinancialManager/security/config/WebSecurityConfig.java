@@ -1,6 +1,6 @@
 package com.example.FinancialManager.security.config;
 
-import com.example.FinancialManager.User.AppUserService;
+import com.example.FinancialManager.user.appUser.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
