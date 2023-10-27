@@ -1,7 +1,7 @@
 package com.example.FinancialManager.user.appUser;
 
 import com.example.FinancialManager.user.accountDetails.AccountDetails;
-import com.example.FinancialManager.user.scheduledTransactions.RecurringExpenses;
+import com.example.FinancialManager.user.transactions.RecurringExpenses;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +22,7 @@ public class AppUser implements UserDetails {
     @SequenceGenerator(
             name = "user_sequence",
             sequenceName = "user_sequence",
-            allocationSize = 1
+            allocationSize = 50
     )
     @Id
     @GeneratedValue(

@@ -1,4 +1,4 @@
-package com.example.FinancialManager.user.scheduledTransactions;
+package com.example.FinancialManager.user.transactions;
 
 import com.example.FinancialManager.user.appUser.AppUser;
 import lombok.EqualsAndHashCode;
@@ -14,25 +14,25 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-public class ScheduledExpenses {
+public class RecurringExpenses {
 
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long scheduled_expense_id;
+    private Long recurring_expense_id;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AppUser appUser;
-    private Date date;
+    private Date date; // FIXME  probably its gonna be string not date
     private double amount;
     @Enumerated(EnumType.STRING)
     private ReminderType reminderType;
     @Enumerated(EnumType.STRING)
     private  TransactionStatus transactionStatus;
 
-    public ScheduledExpenses(AppUser appUser, Date date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
+    public RecurringExpenses(AppUser appUser, Date date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
         this.appUser = appUser;
         this.date = date;
         this.amount = amount;

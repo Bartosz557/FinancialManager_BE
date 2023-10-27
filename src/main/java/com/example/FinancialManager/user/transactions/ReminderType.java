@@ -1,4 +1,4 @@
-package com.example.FinancialManager.user.scheduledTransactions;
+package com.example.FinancialManager.user.transactions;
 
 public enum ReminderType {
     do_not_remind,

@@ -1,7 +1,6 @@
 package com.example.FinancialManager.user.appUser;
 
-import com.example.FinancialManager.user.appUser.AppUser;
-import com.example.FinancialManager.user.appUser.AppUserRepository;
+import com.example.FinancialManager.user.Repositories.AppUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

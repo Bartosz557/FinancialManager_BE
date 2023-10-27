@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -14,9 +15,11 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-public class AccountDetails {
+public class AccountDetails implements Serializable {
 
     @Id
+    private Long account_details_id;  //mapped
+
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
