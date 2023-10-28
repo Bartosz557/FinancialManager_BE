@@ -1,7 +1,8 @@
-package com.example.FinancialManager.user.appUser;
+package com.example.FinancialManager.database.user;
 
-import com.example.FinancialManager.user.accountDetails.AccountDetails;
-import com.example.FinancialManager.user.transactions.RecurringExpenses;
+import com.example.FinancialManager.database.accountDetails.AccountDetails;
+import com.example.FinancialManager.database.accountDetails.LimitDetails;
+import com.example.FinancialManager.database.transactions.RecurringExpenses;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-public class AppUser implements UserDetails {
+public class UserData implements UserDetails {
 
 
     @SequenceGenerator(
@@ -34,27 +35,31 @@ public class AppUser implements UserDetails {
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
-    private AppUserRole appUserRole;
+    private UserRole userRole;
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    @OneToOne(mappedBy = "appUser")
+    // Mapping the foreign keys
+    // TODO set appropriate mapping object names
+    @OneToOne(mappedBy = "userData")
     private AccountDetails accountDetails;
-
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "userData")
     private List<RecurringExpenses> recurringExpensesList;
+    @OneToMany(mappedBy = "userData")
+    private List<LimitDetails> limitDetails;
+    // Mapping the foreign keys
 
-    public AppUser(String username, String email, String password, AppUserRole appUserRole) {
+    public UserData(String username, String email, String password, UserRole userRole) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.appUserRole = appUserRole;
+        this.userRole = userRole;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority(appUserRole.name());
+                new SimpleGrantedAuthority(userRole.name());
         return Collections.singletonList(authority);
     }
 

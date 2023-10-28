@@ -1,6 +1,6 @@
-package com.example.FinancialManager.user.accountDetails;
+package com.example.FinancialManager.database.accountDetails;
 
-import com.example.FinancialManager.user.appUser.AppUser;
+import com.example.FinancialManager.database.user.UserData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,12 +18,11 @@ import java.util.Date;
 public class AccountDetails implements Serializable {
 
     @Id
-    private Long account_details_id;  //mapped
-
+    private Long account_details_id;
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
-    private AppUser appUser;
+    private UserData userData;
     private Date settlement_date;
     private double account_balance;
     private int monthly_limit;

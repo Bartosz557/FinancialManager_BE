@@ -1,6 +1,6 @@
-package com.example.FinancialManager.user.transactions;
+package com.example.FinancialManager.database.transactions;
 
-import com.example.FinancialManager.user.accountDetails.LimitDetails;
+import com.example.FinancialManager.database.accountDetails.LimitDetails;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

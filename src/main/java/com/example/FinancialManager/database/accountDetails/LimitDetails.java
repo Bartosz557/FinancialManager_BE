@@ -1,7 +1,7 @@
-package com.example.FinancialManager.user.accountDetails;
+package com.example.FinancialManager.database.accountDetails;
 
-import com.example.FinancialManager.user.appUser.AppUser;
-import com.example.FinancialManager.user.transactions.ExpenseCategories;
+import com.example.FinancialManager.database.transactions.ExpenseCategories;
+import com.example.FinancialManager.database.user.UserData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@IdClass(LimitDetailsId.class)
+@IdClass(LimitDetailsId.class) // IDK how it exactly works but it works. Setting the multiple elements for PK with class' fields.
 public class LimitDetails implements Serializable {
 
     @Id
@@ -27,7 +27,7 @@ public class LimitDetails implements Serializable {
     @ManyToOne
     @MapsId
     @JoinColumn(name = "user_id")
-    private AppUser appUser;
+    private UserData userData;
 
     @ManyToOne
     @MapsId

@@ -1,11 +1,9 @@
-package com.example.FinancialManager.user.accountDetails;
+package com.example.FinancialManager.database.accountDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Id;
 import java.io.Serializable;
 
 @Embeddable

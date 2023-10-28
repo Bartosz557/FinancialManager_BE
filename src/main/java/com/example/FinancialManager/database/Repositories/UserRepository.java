@@ -1,6 +1,6 @@
-package com.example.FinancialManager.user.Repositories;
+package com.example.FinancialManager.database.Repositories;
 
-import com.example.FinancialManager.user.appUser.AppUser;
+import com.example.FinancialManager.database.user.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface AppUserRepository extends JpaRepository<AppUser, Long> {
-    Optional<AppUser> findByEmail(String email);
+public interface UserRepository extends JpaRepository<UserData, Long> {
+    Optional<UserData> findByEmail(String email);
 }

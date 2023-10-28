@@ -1,11 +1,11 @@
-package com.example.FinancialManager.user.Repositories;
+package com.example.FinancialManager.database.Repositories;
 
-import com.example.FinancialManager.user.transactions.RecurringExpenses;
+import com.example.FinancialManager.database.accountDetails.AccountDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-interface RecurringExpensesRepository extends JpaRepository<RecurringExpenses, Long> {
+interface AccountDetailsRepository extends JpaRepository<AccountDetails, Long> {
 }

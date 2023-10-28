@@ -1,11 +1,11 @@
-package com.example.FinancialManager.user.Repositories;
+package com.example.FinancialManager.database.Repositories;
 
-import com.example.FinancialManager.user.accountDetails.AccountDetails;
+import com.example.FinancialManager.database.userHistory.MonthlyHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Long> {
+interface MonthlyHistoryRepository extends JpaRepository<MonthlyHistory, Long> {
 }

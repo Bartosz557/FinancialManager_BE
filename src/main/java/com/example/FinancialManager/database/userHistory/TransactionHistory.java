@@ -1,8 +1,8 @@
-package com.example.FinancialManager.user.userHistory;
+package com.example.FinancialManager.database.userHistory;
 
-import com.example.FinancialManager.user.appUser.AppUser;
-import com.example.FinancialManager.user.transactions.ExpenseCategories;
-import com.example.FinancialManager.user.transactions.TransactionType;
+import com.example.FinancialManager.database.transactions.ExpenseCategories;
+import com.example.FinancialManager.database.transactions.TransactionType;
+import com.example.FinancialManager.database.user.UserData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class TransactionHistory {
     private Long transaction_id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private AppUser appUser;
+    private UserData userData;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ExpenseCategories expenseCategories;
@@ -35,8 +35,8 @@ public class TransactionHistory {
     private TransactionType transactionType;
     private String transaction_detail;
 
-    public TransactionHistory(AppUser appUser, ExpenseCategories expenseCategories, Date date, TransactionType transactionType, String transaction_detail) {
-        this.appUser = appUser;
+    public TransactionHistory(UserData userData, ExpenseCategories expenseCategories, Date date, TransactionType transactionType, String transaction_detail) {
+        this.userData = userData;
         this.expenseCategories = expenseCategories;
         this.date = date;
         this.transactionType = transactionType;

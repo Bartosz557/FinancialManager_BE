@@ -1,8 +1,8 @@
 package com.example.FinancialManager.registration;
 
-import com.example.FinancialManager.user.appUser.AppUser;
-import com.example.FinancialManager.user.appUser.AppUserRole;
-import com.example.FinancialManager.user.appUser.AppUserService;
+import com.example.FinancialManager.database.user.UserData;
+import com.example.FinancialManager.database.user.UserRole;
+import com.example.FinancialManager.database.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class RegistrationService {
 
-    private final AppUserService appUserService;
+    private final UserService userService;
     private final EmailValidator emailValidator;
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
@@ -18,12 +18,12 @@ public class RegistrationService {
         {
             throw new IllegalStateException(request.getEmail() + " is not valid");
         }
-        return appUserService.signUpUser(
-                new AppUser(
+        return userService.signUpUser(
+                new UserData(
                         request.getUsername(),
                         request.getEmail(),
                         request.getPassword(),
-                        AppUserRole.USER
+                        UserRole.USER
                 ));
     }
 }
