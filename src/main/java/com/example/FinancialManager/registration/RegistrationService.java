@@ -2,7 +2,7 @@ package com.example.FinancialManager.registration;
 
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
-import com.example.FinancialManager.database.user.UserService;
+import com.example.FinancialManager.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
