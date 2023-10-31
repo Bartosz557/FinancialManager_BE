@@ -22,7 +22,7 @@ public class AccountDetails implements Serializable {
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
-    private UserData userData;
+    private UserData userDataAD;
     private Date settlement_date;
     private double account_balance;
     private int monthly_limit;

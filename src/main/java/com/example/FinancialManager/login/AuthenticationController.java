@@ -1,6 +1,5 @@
 package com.example.FinancialManager.login;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,10 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @PostMapping("/api/v1/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginForm loginForm) {
@@ -40,7 +42,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Authentication failed for an unknown reason");
         }
-}
+    }
     @GetMapping("/api/v1/check-authentication")
     public boolean checkAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

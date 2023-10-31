@@ -22,8 +22,7 @@ public class UserData implements UserDetails {
 
     @SequenceGenerator(
             name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 50
+            sequenceName = "user_sequence"
     )
     @Id
     @GeneratedValue(
@@ -36,18 +35,19 @@ public class UserData implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    private Boolean locked = false;
+    private Boolean configured = false;
     private Boolean enabled = true;
 
     // Mapping the foreign keys
     // TODO set appropriate mapping object names
-    @OneToOne(mappedBy = "userData")
+    @OneToOne(mappedBy = "userDataAD")
     private AccountDetails accountDetails;
-    @OneToMany(mappedBy = "userData")
+    @OneToMany(mappedBy = "userDataRE")
     private List<RecurringExpenses> recurringExpensesList;
-    @OneToMany(mappedBy = "userData")
+    @OneToMany(mappedBy = "userDataLD")
     private List<LimitDetails> limitDetails;
     // Mapping the foreign keys
+
 
     public UserData(String username, String email, String password, UserRole userRole) {
         this.username = username;
@@ -75,7 +75,7 @@ public class UserData implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return true;
     }
 
     @Override

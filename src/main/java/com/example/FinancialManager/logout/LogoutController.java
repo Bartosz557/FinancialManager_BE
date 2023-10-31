@@ -13,8 +13,8 @@ public class LogoutController {
         SecurityContextHolder.clearContext();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            return !(authentication.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("USER")));
+            return authentication.getAuthorities().stream()
+                    .noneMatch(authority -> authority.getAuthority().equals("USER"));
         }
         return true;
     }

@@ -24,16 +24,16 @@ public class RecurringExpenses {
     private Long recurring_expense_id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserData userData;
-    private Date date; // FIXME  probably its gonna be string not date
+    private UserData userDataRE;
+    private Date date; // FIXME  probably its gonna be string not a date
     private double amount;
     @Enumerated(EnumType.STRING)
     private ReminderType reminderType;
     @Enumerated(EnumType.STRING)
     private  TransactionStatus transactionStatus;
 
-    public RecurringExpenses(UserData userData, Date date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
-        this.userData = userData;
+    public RecurringExpenses(UserData userDataRE, Date date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
+        this.userDataRE = userDataRE;
         this.date = date;
         this.amount = amount;
         this.reminderType = reminderType;

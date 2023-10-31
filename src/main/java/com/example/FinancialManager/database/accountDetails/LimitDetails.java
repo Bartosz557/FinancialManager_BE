@@ -15,7 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@IdClass(LimitDetailsId.class) // IDK how it exactly works but it works. Setting the multiple elements for PK with class' fields.
+@IdClass(LimitDetailsId.class) // IDK how it exactly works but it works. Sets the multiple elements for PK with class' fields.
 public class LimitDetails implements Serializable {
 
     @Id
@@ -27,7 +27,7 @@ public class LimitDetails implements Serializable {
     @ManyToOne
     @MapsId
     @JoinColumn(name = "user_id")
-    private UserData userData;
+    private UserData userDataLD;
 
     @ManyToOne
     @MapsId
