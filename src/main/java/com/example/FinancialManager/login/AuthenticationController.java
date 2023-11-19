@@ -28,7 +28,7 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody LoginForm loginForm) {
         try {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginForm.getUsername(), loginForm.getPassword())
+                new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

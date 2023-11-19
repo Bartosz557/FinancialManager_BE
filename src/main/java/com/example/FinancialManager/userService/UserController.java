@@ -28,6 +28,4 @@ public class UserController {
                     .body("Error: " + e.getMessage());
         }
     }
-
-
 }
