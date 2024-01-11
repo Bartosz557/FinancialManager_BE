@@ -33,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable(); // FORM DISABLED
         http.logout()
                 .disable();
-
     }
 
     @Override

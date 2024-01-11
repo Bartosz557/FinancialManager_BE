@@ -1,5 +1,7 @@
 package com.example.FinancialManager.userService;
 
+import com.example.FinancialManager.database.user.UserData;
+import com.example.FinancialManager.database.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +29,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("api/v1/profile/get-user-role")
+    public UserRole getUserRole(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserData userDetails = (UserData) authentication.getPrincipal();
+            return userDetails.getUserRole();
+        }
+        return null;
     }
 }
