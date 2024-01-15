@@ -1,5 +1,6 @@
 package com.example.FinancialManager.security.config;
 
+import com.example.FinancialManager.database.user.UserRole;
 import com.example.FinancialManager.userService.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v*/registration/**","/api/v*/check-authentication","/api/v*/login/**","/api/v*/logout","/api/v*/log")
+                .antMatchers("/api/v*/registration/**", "/api/v*/check-authentication", "/api/v*/login/**", "/api/v*/logout", "/api/v*/log")
                 .permitAll()
-                .anyRequest()
-                .authenticated().and()
-                .formLogin().disable(); // FORM DISABLED
-        http.logout()
-                .disable();
+                .antMatchers("/admin/**").hasAuthority(UserRole.ADMIN.name())
+                .antMatchers("/admin/get-status")
+                .permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().disable()
+                .logout().disable();
     }
 
     @Override

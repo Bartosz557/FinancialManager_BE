@@ -1,4 +1,4 @@
-package com.example.FinancialManager;
+package com.example.FinancialManager.AdminCockpit;
 
 import com.example.FinancialManager.database.Repositories.UserRepository;
 import com.example.FinancialManager.database.user.UserData;
