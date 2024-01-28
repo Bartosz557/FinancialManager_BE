@@ -23,7 +23,7 @@ public class ScheduledExpenses {
     )
     private Long scheduled_expense_id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userID")
     private UserData userData;
     private Date date;
     private double amount;

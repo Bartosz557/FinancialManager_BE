@@ -29,7 +29,7 @@ public class UserData implements UserDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    private Long user_id;
+    private Long userID;
     private String username;
     private String email;
     private String password;
@@ -40,11 +40,11 @@ public class UserData implements UserDetails {
 
     // Mapping the foreign keys
     // TODO set appropriate mapping object names
-    @OneToOne(mappedBy = "userDataAD")
+    @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.REMOVE)
     private AccountDetails accountDetails;
-    @OneToMany(mappedBy = "userDataRE")
+    @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.REMOVE)
     private List<RecurringExpenses> recurringExpensesList;
-    @OneToMany(mappedBy = "userDataLD")
+    @OneToMany(mappedBy = "userDataLD", cascade = CascadeType.REMOVE)
     private List<LimitDetails> limitDetails;
     // Mapping the foreign keys
 
@@ -65,7 +65,7 @@ public class UserData implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

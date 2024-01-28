@@ -19,24 +19,24 @@ import java.io.Serializable;
 public class LimitDetails implements Serializable {
 
     @Id
-    private Long user_id;
+    private Long userID;
 
     @Id
-    private Long category_id;
+    private Long categoryID;
 
     @ManyToOne
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userID")
     private UserData userDataLD;
 
     @ManyToOne
     @MapsId
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryID")
     private ExpenseCategories expenseCategories;
 
-    private double limit_value;
+    private double limitValue;
 
-    public LimitDetails(double limit_value) {
-        this.limit_value = limit_value;
+    public LimitDetails(double limitValue) {
+        this.limitValue = limitValue;
     }
 }

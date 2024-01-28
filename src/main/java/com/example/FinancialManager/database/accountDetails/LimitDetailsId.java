@@ -11,6 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class LimitDetailsId implements Serializable {
 
-    private Long user_id;
-    private Long category_id;
+    private Long userID;
+    private Long categoryID;
 }

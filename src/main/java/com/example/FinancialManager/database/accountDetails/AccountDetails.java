@@ -18,23 +18,23 @@ import java.util.Date;
 public class AccountDetails implements Serializable {
 
     @Id
-    private Long account_details_id;
+    private Long accountDetailsID;
     @OneToOne
     @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userID")
     private UserData userDataAD;
-    private Date settlement_date;
-    private double account_balance;
-    private int monthly_limit;
+    private Date settlementDate;
+    private double accountBalance;
+    private int monthlyLimit;
     private double savings;
-    private double residual_funds;
+    private double residualFunds;
 
-    public AccountDetails(Date settlement_date, double account_balance, int monthly_limit, double savings, double residual_funds) {
-        this.settlement_date = settlement_date;
-        this.account_balance = account_balance;
-        this.monthly_limit = monthly_limit;
+    public AccountDetails(Date settlementDate, double accountBalance, int monthlyLimit, double savings, double residualFunds) {
+        this.settlementDate = settlementDate;
+        this.accountBalance = accountBalance;
+        this.monthlyLimit = monthlyLimit;
         this.savings = savings;
-        this.residual_funds = residual_funds;
+        this.residualFunds = residualFunds;
     }
 
 }
