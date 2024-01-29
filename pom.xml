@@ -19,6 +19,8 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

@@ -1,5 +1,7 @@
 package com.example.FinancialManager.login;
 
+import com.example.FinancialManager.loggerService.LogService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,15 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@AllArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private final LogService logService;
+
 
     @PostMapping("/api/v1/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginForm loginForm) {
@@ -33,7 +34,7 @@ public class AuthenticationController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
-
+            logService.addLoginLog(loginForm.getEmail());
             return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
