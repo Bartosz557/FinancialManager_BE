@@ -28,7 +28,6 @@ public class LogService {
             int minute = currentTime.getMinute();
             int second = currentTime.getSecond();
 
-            // Create a string representing the current time
             String currentTimeString = hour + ":" + minute + ":" + second;
             bw.write("User: " + email + logType + " successfully at: " + currentDate +" : "+currentTimeString);
             bw.newLine();

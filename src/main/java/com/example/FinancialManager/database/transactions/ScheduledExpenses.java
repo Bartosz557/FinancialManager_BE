@@ -15,7 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 public class ScheduledExpenses {
-
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

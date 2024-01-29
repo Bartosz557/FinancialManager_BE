@@ -69,7 +69,6 @@ public class UserService implements UserDetailsService {
                 ));
             }
         }
-        // Convert userDetailsForms to JSON
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(userDetailsForms);

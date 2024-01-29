@@ -40,6 +40,26 @@ public class AdminController {
         }
     }
 
+    // TODO: stick it into 1 controller method!!
+    @PutMapping("/change-user-settings/change-email")
+    public ResponseEntity<?> changeEmail(@RequestBody SettingChangeREquest request){
+        try {
+            userService.updateUserSetting(request, "email");
+            return ResponseEntity.ok("Email changed successfully");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+        }
+    }
+    @PutMapping("/change-user-settings/change-paswword")
+    public ResponseEntity<?> changePassword(@RequestBody SettingChangeREquest request){
+        try {
+            userService.updateUserSetting(request, "password");
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body("Error: " + ex.getMessage());
+        }
+    }
+
     @DeleteMapping("/delete-user/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable String username){
         logger.info(username);

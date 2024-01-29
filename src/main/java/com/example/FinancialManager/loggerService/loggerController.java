@@ -1,5 +1,6 @@
 package com.example.FinancialManager.loggerService;
 
+import com.example.FinancialManager.database.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("admin/logger")
 public class loggerController {
 
+    UserRepository userRepository;
     @GetMapping("/login-logs")
     public ResponseEntity<Resource> getLoginLogs(){
         Resource resource = new ClassPathResource("login_monitor.txt");

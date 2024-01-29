@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class ExpenseCategories {
-
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -23,7 +22,6 @@ public class ExpenseCategories {
     )
     private Long category_id;
     private String category_name;
-
     @OneToMany(mappedBy = "expenseCategories")
     private List<LimitDetails> limitDetails;
 

@@ -17,7 +17,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 public class TransactionHistory {
-
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

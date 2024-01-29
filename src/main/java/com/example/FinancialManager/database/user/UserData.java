@@ -18,8 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class UserData implements UserDetails {
-
-
     @SequenceGenerator(
             name = "user_sequence",
             sequenceName = "user_sequence"
@@ -37,16 +35,12 @@ public class UserData implements UserDetails {
     private UserRole userRole;
     private Boolean configured = false;
     private Boolean enabled = true;
-
-    // Mapping the foreign keys
-    // TODO set appropriate mapping object names
     @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.REMOVE)
     private AccountDetails accountDetails;
     @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.REMOVE)
     private List<RecurringExpenses> recurringExpensesList;
     @OneToMany(mappedBy = "userDataLD", cascade = CascadeType.REMOVE)
     private List<LimitDetails> limitDetails;
-    // Mapping the foreign keys
 
 
     public UserData(String username, String email, String password, UserRole userRole) {
