@@ -16,16 +16,13 @@ import java.util.List;
 @Entity
 public class ExpenseCategories {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
-    private Long category_id;
-    private String category_name;
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private Long categoryId;
+    private String categoryName;
     @OneToMany(mappedBy = "expenseCategories")
     private List<LimitDetails> limitDetails;
 
     public ExpenseCategories(String category_name) {
-        this.category_name = category_name;
+        this.categoryName = category_name;
     }
 }

@@ -18,10 +18,7 @@ import java.util.Date;
 @Entity
 public class TransactionHistory {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long transaction_id;
     @ManyToOne
     @JoinColumn(name = "user_id")

@@ -15,13 +15,10 @@ import javax.persistence.*;
 @Entity
 public class MonthlyHistory {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long monthId;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private UserData userData;
     private int monthNumber;
     private String archival_expense;

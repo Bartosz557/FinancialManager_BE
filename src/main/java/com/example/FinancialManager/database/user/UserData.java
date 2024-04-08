@@ -18,15 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class UserData implements UserDetails {
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence"
-    )
+
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long userID;
     private String username;
     private String email;
@@ -35,7 +29,8 @@ public class UserData implements UserDetails {
     private UserRole userRole;
     private Boolean configured = false;
     private Boolean enabled = true;
-    @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private AccountDetails accountDetails;
     @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.REMOVE)
     private List<RecurringExpenses> recurringExpensesList;

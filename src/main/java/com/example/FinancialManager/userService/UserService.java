@@ -1,11 +1,18 @@
 package com.example.FinancialManager.userService;
 
+import com.example.FinancialManager.AdminCockpit.AdminController;
+import com.example.FinancialManager.database.Repositories.AccountDetailsRepository;
 import com.example.FinancialManager.database.Repositories.UserRepository;
+import com.example.FinancialManager.database.accountDetails.AccountDetails;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,9 +27,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final AccountDetailsRepository accountDetailsRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -102,5 +111,32 @@ public class UserService implements UserDetailsService {
     public int deleteUser(String username) {
         return userRepository.deleteByUsername(username);
 //        return userRepository.deleteByUserID(6L);
+    }
+
+    public void setUserConfiguration(ConfigurationForm configurationForm) {
+        setMainConfiguration(configurationForm.getMainConfig());
+        setSubcategories(configurationForm.getSubCategories());
+        setRepeatingExpenses(configurationForm.getRepeatingExpenses());
+    }
+
+    private void setRepeatingExpenses(RepeatingExpenses repeatingExpenses) {
+    }
+
+    private void setSubcategories(SubCategories subCategories) {
+        
+    }
+
+    private void setMainConfiguration(MainConfig mainConfig) {
+        AccountDetails accountDetails = new AccountDetails();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userRepository.findByUsername(authentication.getName()).ifPresent(accountDetails::setUserDataAD);
+        userRepository.findByUsername(authentication.getName()).ifPresent(userData -> logger.info("user created" + userData.getUserID()));
+        accountDetails.setSettlementDate(mainConfig.getSettlementDate());
+        accountDetails.setAccountBalance(mainConfig.getAccountBalance());
+        accountDetails.setMonthlyLimit(mainConfig.getMonthlyLimit());
+        accountDetails.setMonthlyIncome(mainConfig.getMonthlyIncome());
+        accountDetails.setSavings(0);
+        accountDetails.setResidualFunds(0);
+        accountDetailsRepository.save(accountDetails);
     }
 }

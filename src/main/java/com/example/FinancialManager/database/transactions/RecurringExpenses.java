@@ -16,10 +16,7 @@ import java.util.Date;
 @Entity
 public class RecurringExpenses {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long recurring_expense_id;
     @ManyToOne
     @JoinColumn(name = "user_id")
