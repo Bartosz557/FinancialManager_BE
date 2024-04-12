@@ -113,20 +113,21 @@ public class UserService implements UserDetailsService {
 //        return userRepository.deleteByUserID(6L);
     }
 
-    public void setUserConfiguration(ConfigurationForm configurationForm) {
-        setMainConfiguration(configurationForm.getMainConfig());
-        setSubcategories(configurationForm.getSubCategories());
-        setRepeatingExpenses(configurationForm.getRepeatingExpenses());
+    public boolean setUserConfiguration(ConfigurationForm configurationForm) {
+        return setMainConfiguration(configurationForm.getMainConfig()) &&
+                setSubcategories(configurationForm.getSubCategories()) &&
+                setRepeatingExpenses(configurationForm.getRepeatingExpenses());
     }
 
-    private void setRepeatingExpenses(RepeatingExpenses repeatingExpenses) {
+    private boolean setRepeatingExpenses(RepeatingExpenses repeatingExpenses) {
+        return true;
     }
 
-    private void setSubcategories(SubCategories subCategories) {
-        
+    private boolean setSubcategories(SubCategories subCategories) {
+        return true;
     }
 
-    private void setMainConfiguration(MainConfig mainConfig) {
+    private boolean setMainConfiguration(MainConfig mainConfig) {
         AccountDetails accountDetails = new AccountDetails();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userRepository.findByUsername(authentication.getName()).ifPresent(accountDetails::setUserDataAD);
@@ -138,5 +139,6 @@ public class UserService implements UserDetailsService {
         accountDetails.setSavings(0);
         accountDetails.setResidualFunds(0);
         accountDetailsRepository.save(accountDetails);
+        return true;
     }
 }
