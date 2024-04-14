@@ -23,7 +23,7 @@ public class AccountDetails implements Serializable {
     @MapsId
     @JoinColumn(name = "userID")
     private UserData userDataAD;
-    private String settlementDate;
+    private int settlementDate;
     private double accountBalance;
     private int monthlyIncome;
     private int monthlyLimit;
@@ -31,7 +31,7 @@ public class AccountDetails implements Serializable {
     private double savings; // piggy bank
     private double residualFunds; // funds left from previous months
 
-    public AccountDetails(String settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
+    public AccountDetails(int settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
         this.settlementDate = settlementDate;
         this.accountBalance = accountBalance;
         this.monthlyIncome = monthlyIncome;
