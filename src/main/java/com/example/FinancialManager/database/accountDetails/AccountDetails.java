@@ -27,14 +27,16 @@ public class AccountDetails implements Serializable {
     private double accountBalance;
     private int monthlyIncome;
     private int monthlyLimit;
-    private double savings;
-    private double residualFunds;
+    private double expenses; // expenses for current month
+    private double savings; // piggy bank
+    private double residualFunds; // funds left from previous months
 
-    public AccountDetails(String settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double savings, double residualFunds) {
+    public AccountDetails(String settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
         this.settlementDate = settlementDate;
         this.accountBalance = accountBalance;
         this.monthlyIncome = monthlyIncome;
         this.monthlyLimit = monthlyLimit;
+        this.expenses = expenses;
         this.savings = savings;
         this.residualFunds = residualFunds;
     }

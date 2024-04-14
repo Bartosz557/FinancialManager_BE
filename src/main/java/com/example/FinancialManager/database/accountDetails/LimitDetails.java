@@ -15,23 +15,34 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@IdClass(LimitDetailsId.class) // IDK how it exactly works but it works. Sets the multiple elements for PK with class' fields.
 public class LimitDetails implements Serializable {
-    @Id
-    private Long userID;
-    @Id
-    private Long categoryID;
+
+    @EmbeddedId
+    private LimitDetailsId id;
+
     @ManyToOne
-    @MapsId
+    @MapsId("userID")
     @JoinColumn(name = "userID")
     private UserData userDataLD;
+
     @ManyToOne
-    @MapsId
+    @MapsId("categoryID")
     @JoinColumn(name = "categoryID")
-    private ExpenseCategories expenseCategories;
+    private ExpenseCategories expenseCategoriesID;
+
     private double limitValue;
 
     public LimitDetails(double limitValue) {
         this.limitValue = limitValue;
+    }
+
+    @Override
+    public String toString() {
+        return "LimitDetails{" +
+                "id=" + id +
+                ", userDataLD=" + userDataLD +
+                ", expenseCategoriesID=" + expenseCategoriesID +
+                ", limitValue=" + limitValue +
+                '}';
     }
 }

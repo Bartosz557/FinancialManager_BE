@@ -3,6 +3,7 @@ package com.example.FinancialManager.userService;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -44,14 +45,27 @@ public class UserController {
         return null;
     }
 
+    @GetMapping("/api/v1/profile/get-username")
+    public ResponseEntity<?> getUsername(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserData userDetails = (UserData) authentication.getPrincipal();
+            return ResponseEntity.ok(userDetails.getUsername());
+        }
+        return null;
+    }
+
     @PostMapping("api/v1/profile/set-configuration")
     public ResponseEntity<?> setUserConfiguration(@RequestBody ConfigurationForm configurationForm){
         try {
-            userService.setUserConfiguration(configurationForm);
-        }catch (HttpClientErrorException.BadRequest e){
+            if(userService.setUserConfiguration(configurationForm))
+                userService.userConfiguredSet();
+        }catch (HttpClientErrorException.BadRequest | IllegalAccessException e){
             return ResponseEntity.status(500).body("Bad request");
         }
-        return ResponseEntity.ok(true);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.getConfigurationStatus(email));
     }
 
 }

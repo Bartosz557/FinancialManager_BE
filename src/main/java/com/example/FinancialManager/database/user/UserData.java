@@ -29,12 +29,16 @@ public class UserData implements UserDetails {
     private UserRole userRole;
     private Boolean configured = false;
     private Boolean enabled = true;
+
     @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private AccountDetails accountDetails;
-    @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.REMOVE)
+
+    @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private List<RecurringExpenses> recurringExpensesList;
-    @OneToMany(mappedBy = "userDataLD", cascade = CascadeType.REMOVE)
+
+    @OneToMany(mappedBy = "userDataLD", cascade = CascadeType.ALL)
     private List<LimitDetails> limitDetails;
 
 

@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 public class Expense {
     private String name;
+    private String date;
     private int amount;
 }

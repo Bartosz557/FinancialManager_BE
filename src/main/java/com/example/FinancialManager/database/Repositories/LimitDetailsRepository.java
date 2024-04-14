@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-interface LimitDetailsRepository extends JpaRepository<LimitDetails, Long> {
+public interface LimitDetailsRepository extends JpaRepository<LimitDetails, Long> {
 }

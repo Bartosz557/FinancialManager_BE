@@ -19,7 +19,8 @@ public class ExpenseCategories {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long categoryId;
     private String categoryName;
-    @OneToMany(mappedBy = "expenseCategories")
+
+    @OneToMany(mappedBy = "expenseCategoriesID", cascade = CascadeType.ALL)
     private List<LimitDetails> limitDetails;
 
     public ExpenseCategories(String category_name) {

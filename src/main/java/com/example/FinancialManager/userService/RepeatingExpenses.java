@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class RepeatingExpenses {
     private boolean repeatingExpense;
-    List<Expense> expenses;
+    private List<Expense> expenses;
 }

@@ -1,9 +1,14 @@
 package com.example.FinancialManager.userService;
 
 import com.example.FinancialManager.AdminCockpit.AdminController;
-import com.example.FinancialManager.database.Repositories.AccountDetailsRepository;
-import com.example.FinancialManager.database.Repositories.UserRepository;
+import com.example.FinancialManager.database.Repositories.*;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
+import com.example.FinancialManager.database.accountDetails.LimitDetails;
+import com.example.FinancialManager.database.accountDetails.LimitDetailsId;
+import com.example.FinancialManager.database.transactions.ExpenseCategories;
+import com.example.FinancialManager.database.transactions.RecurringExpenses;
+import com.example.FinancialManager.database.transactions.ReminderType;
+import com.example.FinancialManager.database.transactions.TransactionStatus;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +24,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +34,15 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final AccountDetailsRepository accountDetailsRepository;
+    private final ExpenseCategoriesRepository expenseCategoriesRepository;
+    private final LimitDetailsRepository limitDetailsRepository;
+    private final RecurringExpensesRepository recurringExpensesRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -40,15 +51,8 @@ public class UserService implements UserDetailsService {
 
     public boolean getConfigurationStatus(String email)
     {
-        Boolean status;
-        Optional<UserData> userData = userRepository.findByEmail(email);
-        if (userData.isEmpty()) {
-            UserData data = userData.get();
-            status = data.getConfigured();
-            return status;
-        } else {
-            throw new IllegalStateException("User not found for email: " + email);
-        }
+        UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        return userData.getConfigured();
     }
 
     public String signUpUser(UserData userData)
@@ -113,32 +117,94 @@ public class UserService implements UserDetailsService {
 //        return userRepository.deleteByUserID(6L);
     }
 
-    public boolean setUserConfiguration(ConfigurationForm configurationForm) {
+    public boolean setUserConfiguration(ConfigurationForm configurationForm) throws IllegalAccessException {
         return setMainConfiguration(configurationForm.getMainConfig()) &&
-                setSubcategories(configurationForm.getSubCategories()) &&
+                setLimitDetails(configurationForm.getSubCategories()) &&
                 setRepeatingExpenses(configurationForm.getRepeatingExpenses());
     }
 
     private boolean setRepeatingExpenses(RepeatingExpenses repeatingExpenses) {
+        logger.info("setRepeatingExpenses");
+        if(!repeatingExpenses.isRepeatingExpense())
+            return true;
+        RecurringExpenses recurringExpenses = new RecurringExpenses();
+        UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Expense> expenses = repeatingExpenses.getExpenses();
+        for( Expense expense : expenses){
+            recurringExpenses.setUserDataRE(userData);
+            recurringExpenses.setName(expense.getName());
+            recurringExpenses.setDate(expense.getDate());
+            recurringExpenses.setAmount(expense.getAmount());
+            recurringExpenses.setReminderType(ReminderType.two_reminders);
+            recurringExpenses.setTransactionStatus(TransactionStatus.PENDING);
+            recurringExpensesRepository.save(recurringExpenses);
+        }
         return true;
     }
 
-    private boolean setSubcategories(SubCategories subCategories) {
+    private boolean setLimitDetails(SubCategories subCategories) throws IllegalAccessException {
+        logger.info("setLimitDetails");
+        if(!subCategories.isExpenseCategories())
+            return true;
+        UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        Class<?> clazz = SubCategories.class;
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            logger.info("Field type: " + field.getType());
+            field.setAccessible(true);
+            if(field.getType() == boolean.class) {
+                if (!field.getBoolean(subCategories))
+                    return true;
+            } else {
+                if (field.getInt(subCategories) == 0)
+                    continue;
+                logger.info("Field name: " + field.getName());
+                logger.info("Field value: " + field.getInt(subCategories));
+                LimitDetails limitDetails = new LimitDetails();
+                LimitDetailsId limitDetailsId = new LimitDetailsId();
+                limitDetailsId.setUserID(userData.getUserID());
+                ExpenseCategories expenseCategories = expenseCategoriesRepository.findByCategoryName(field.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+                limitDetailsId.setCategoryID(expenseCategories.getCategoryId());
+                limitDetails.setId(limitDetailsId);
+                limitDetails.setUserDataLD(userData);
+                limitDetails.setExpenseCategoriesID(expenseCategories);
+                expenseCategoriesRepository.findByCategoryName(field.getName()).ifPresent(expenseCategory -> {
+                    logger.info("Expense category found: " + expenseCategory.getCategoryId());
+                });
+                limitDetails.setLimitValue(field.getInt(subCategories));
+                logger.info(limitDetails.toString());
+                limitDetailsRepository.save(limitDetails);
+            }
+        }
         return true;
     }
 
     private boolean setMainConfiguration(MainConfig mainConfig) {
+        logger.info("setMainConfiguration");
         AccountDetails accountDetails = new AccountDetails();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        userRepository.findByUsername(authentication.getName()).ifPresent(accountDetails::setUserDataAD);
-        userRepository.findByUsername(authentication.getName()).ifPresent(userData -> logger.info("user created" + userData.getUserID()));
+        userRepository.findByUsername(getContextUser().getName()).ifPresent(accountDetails::setUserDataAD);
         accountDetails.setSettlementDate(mainConfig.getSettlementDate());
         accountDetails.setAccountBalance(mainConfig.getAccountBalance());
         accountDetails.setMonthlyLimit(mainConfig.getMonthlyLimit());
         accountDetails.setMonthlyIncome(mainConfig.getMonthlyIncome());
-        accountDetails.setSavings(0);
-        accountDetails.setResidualFunds(0);
+        accountDetails.setExpenses(0.0);
+        accountDetails.setSavings(0.0);
+        accountDetails.setResidualFunds(0.0);
         accountDetailsRepository.save(accountDetails);
         return true;
     }
+
+    private Authentication getContextUser(){
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public void userConfiguredSet() {
+        UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        userData.setConfigured(true);
+        userRepository.save(userData);
+    }
+
+//    public String getUsername() {
+//        return
+//    }
 }

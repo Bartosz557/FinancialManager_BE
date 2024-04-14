@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-interface RecurringExpensesRepository extends JpaRepository<RecurringExpenses, Long> {
+public interface RecurringExpensesRepository extends JpaRepository<RecurringExpenses, Long> {
 }
