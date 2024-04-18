@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
+public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
 }

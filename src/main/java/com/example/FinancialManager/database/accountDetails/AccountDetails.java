@@ -31,7 +31,8 @@ public class AccountDetails implements Serializable {
     private double savings; // piggy bank
     private double residualFunds; // funds left from previous months
 
-    public AccountDetails(int settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
+    public AccountDetails(UserData userDataAD, int settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
+        this.userDataAD = userDataAD;
         this.settlementDate = settlementDate;
         this.accountBalance = accountBalance;
         this.monthlyIncome = monthlyIncome;
@@ -40,5 +41,4 @@ public class AccountDetails implements Serializable {
         this.savings = savings;
         this.residualFunds = residualFunds;
     }
-
 }

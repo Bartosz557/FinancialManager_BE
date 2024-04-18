@@ -49,6 +49,16 @@ public class UserData implements UserDetails {
         this.userRole = userRole;
     }
 
+    // Constructor for the initial test user
+    public UserData(String username, String email, String password, UserRole userRole, Boolean configured, Boolean enabled) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userRole = userRole;
+        this.configured = configured;
+        this.enabled = enabled;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority =

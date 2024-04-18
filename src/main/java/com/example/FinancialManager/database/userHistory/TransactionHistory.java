@@ -26,16 +26,18 @@ public class TransactionHistory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ExpenseCategories expenseCategories;
-    private Date date;
+    private String date;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
-    private String transaction_detail;
+    private String transactionName;
+    private double transactionValue;
 
-    public TransactionHistory(UserData userData, ExpenseCategories expenseCategories, Date date, TransactionType transactionType, String transaction_detail) {
+    public TransactionHistory(UserData userData, ExpenseCategories expenseCategories, String date, TransactionType transactionType, String transactionName, double transactionValue) {
         this.userData = userData;
         this.expenseCategories = expenseCategories;
         this.date = date;
         this.transactionType = transactionType;
-        this.transaction_detail = transaction_detail;
+        this.transactionName = transactionName;
+        this.transactionValue = transactionValue;
     }
 }

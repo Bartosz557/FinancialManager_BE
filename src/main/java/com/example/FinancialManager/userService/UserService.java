@@ -1,16 +1,14 @@
 package com.example.FinancialManager.userService;
 
-import com.example.FinancialManager.AdminCockpit.AdminController;
+import com.example.FinancialManager.ProfileDashboard.TransactionForm;
 import com.example.FinancialManager.database.Repositories.*;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
 import com.example.FinancialManager.database.accountDetails.LimitDetails;
 import com.example.FinancialManager.database.accountDetails.LimitDetailsId;
-import com.example.FinancialManager.database.transactions.ExpenseCategories;
-import com.example.FinancialManager.database.transactions.RecurringExpenses;
-import com.example.FinancialManager.database.transactions.ReminderType;
-import com.example.FinancialManager.database.transactions.TransactionStatus;
+import com.example.FinancialManager.database.transactions.*;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
+import com.example.FinancialManager.database.userHistory.TransactionHistory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -23,12 +21,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -42,6 +41,7 @@ public class UserService implements UserDetailsService {
     private final ExpenseCategoriesRepository expenseCategoriesRepository;
     private final LimitDetailsRepository limitDetailsRepository;
     private final RecurringExpensesRepository recurringExpensesRepository;
+    private final TransactionHistoryRepository transactionHistoryRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -204,6 +204,46 @@ public class UserService implements UserDetailsService {
         userRepository.save(userData);
     }
 
+    @Transactional
+    public String addTransaction(TransactionForm transactionForm) {
+        String response = "ok";
+        ExpenseCategories expenseCategories = expenseCategoriesRepository.findByCategoryName(transactionForm.getCategoryName()).orElseThrow(() -> new RuntimeException("Category not found"));
+        UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
+        TransactionHistory transactionHistory = new TransactionHistory(
+                userData,
+                expenseCategories,
+                getCurrentDateFormatted(),
+                transactionForm.getTransactionType(),
+                transactionForm.getExpenseName(),
+                transactionForm.getTransactionValue());
+        transactionHistoryRepository.save(transactionHistory);
+        AccountDetails accountDetails = accountDetailsRepository.findById(userData.getUserID()).orElseThrow(() -> new RuntimeException("Account details not found"));
+         if(transactionForm.getTransactionType() == TransactionType.EXPENSE)
+             response = addExpense(transactionForm.getTransactionValue(),accountDetails,response);
+         else if (transactionForm.getTransactionType() == TransactionType.DEPOSIT)
+             accountDetails.setAccountBalance(accountDetails.getAccountBalance()+transactionForm.getTransactionValue());
+         else
+             return "Transaction type issue - action failed";
+         try{
+             accountDetailsRepository.save(accountDetails);
+         }catch (Exception e){
+             logger.error("Failed to save account details", e);
+         }
+        return response;
+    }
+    private String addExpense(double value, AccountDetails accountDetails, String response) {
+        accountDetails.setAccountBalance(accountDetails.getAccountBalance()-value);
+        accountDetails.setExpenses(accountDetails.getExpenses()+value);
+        if(accountDetails.getExpenses()<0.0)
+            response = response + "Your account has reached negative balance!";
+        return response;
+    }
+
+    private String getCurrentDateFormatted() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return currentDate.format(formatter);
+    }
 //    public String getUsername() {
 //        return
 //    }
