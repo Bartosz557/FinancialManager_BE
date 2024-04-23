@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class RepeatingExpenses {
+public class RecurringExpensesForm {
     private boolean repeatingExpense;
     private List<Expense> expenses;
 }

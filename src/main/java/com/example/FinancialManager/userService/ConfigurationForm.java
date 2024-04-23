@@ -9,5 +9,5 @@ public class ConfigurationForm {
 
     private MainConfig mainConfig;
     private SubCategories subCategories;
-    private RepeatingExpenses repeatingExpenses;
+    private RecurringExpensesForm repeatingExpenses;
 }

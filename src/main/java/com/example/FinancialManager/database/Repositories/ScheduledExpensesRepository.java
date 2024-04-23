@@ -7,5 +7,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-interface ScheduledExpensesRepository extends JpaRepository<ScheduledExpenses, Long> {
+public interface ScheduledExpensesRepository extends JpaRepository<ScheduledExpenses, Long> {
 }

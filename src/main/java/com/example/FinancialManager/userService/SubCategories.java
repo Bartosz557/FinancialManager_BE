@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 public class SubCategories {
 
-    private boolean expenseCategories;
     private int groceries;
     private int diningOut;
     private int transport;

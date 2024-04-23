@@ -21,7 +21,8 @@ public class InitializeExpenseCategories implements CommandLineRunner {
                 "clothes",
                 "traveling",
                 "hobby",
-                "miscellaneous"
+                "miscellaneous",
+                "other"
     };
     @Override
     public void run(String... args) {

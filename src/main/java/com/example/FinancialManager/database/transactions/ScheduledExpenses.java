@@ -20,16 +20,23 @@ public class ScheduledExpenses {
     private Long scheduled_expense_id;
     @ManyToOne
     @JoinColumn(name = "userID")
-    private UserData userData;
-    private Date date;
+    private UserData userDataSE;
+    private String date;
     private double amount;
     @Enumerated(EnumType.STRING)
     private ReminderType reminderType;
     @Enumerated(EnumType.STRING)
     private  TransactionStatus transactionStatus;
 
-    public ScheduledExpenses(UserData userData, Date date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
-        this.userData = userData;
+    public ScheduledExpenses(UserData userDataSE, String date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
+        this.userDataSE = userDataSE;
+        this.date = date;
+        this.amount = amount;
+        this.reminderType = reminderType;
+        this.transactionStatus = transactionStatus;
+    }
+
+    public ScheduledExpenses(String date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
         this.date = date;
         this.amount = amount;
         this.reminderType = reminderType;

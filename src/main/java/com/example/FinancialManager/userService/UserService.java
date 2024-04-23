@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
     private final LimitDetailsRepository limitDetailsRepository;
     private final RecurringExpensesRepository recurringExpensesRepository;
     private final TransactionHistoryRepository transactionHistoryRepository;
+    private final ScheduledExpensesRepository scheduledExpensesRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -117,19 +118,23 @@ public class UserService implements UserDetailsService {
 //        return userRepository.deleteByUserID(6L);
     }
 
+    // TODO do smth wit this XDDD
     public boolean setUserConfiguration(ConfigurationForm configurationForm) throws IllegalAccessException {
-        return setMainConfiguration(configurationForm.getMainConfig()) &&
-                setLimitDetails(configurationForm.getSubCategories()) &&
-                setRepeatingExpenses(configurationForm.getRepeatingExpenses());
+        boolean status = true;
+        if(!setMainConfiguration(configurationForm.getMainConfig()))
+            status = false;
+        if(!addLimitDetails(configurationForm.getSubCategories()))
+            status = false;
+        if(configurationForm.getRepeatingExpenses().isRepeatingExpense())
+            if(!addRecurringExpense(configurationForm.getRepeatingExpenses().getExpenses()))
+                status = false;
+        return status;
     }
 
-    private boolean setRepeatingExpenses(RepeatingExpenses repeatingExpenses) {
+    public boolean addRecurringExpense(List<Expense> expenses) {
         logger.info("setRepeatingExpenses");
-        if(!repeatingExpenses.isRepeatingExpense())
-            return true;
         RecurringExpenses recurringExpenses = new RecurringExpenses();
         UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
-        List<Expense> expenses = repeatingExpenses.getExpenses();
         for( Expense expense : expenses){
             recurringExpenses.setUserDataRE(userData);
             recurringExpenses.setName(expense.getName());
@@ -142,13 +147,12 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    private boolean setLimitDetails(SubCategories subCategories) throws IllegalAccessException {
+    public boolean addLimitDetails(SubCategories subCategories) throws IllegalAccessException {
         logger.info("setLimitDetails");
-        if(!subCategories.isExpenseCategories())
-            return true;
         UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
         Class<?> clazz = SubCategories.class;
         Field[] fields = clazz.getDeclaredFields();
+        int categoryLimit = 0;
         for (Field field : fields) {
             logger.info("Field type: " + field.getType());
             field.setAccessible(true);
@@ -172,11 +176,27 @@ public class UserService implements UserDetailsService {
                     logger.info("Expense category found: " + expenseCategory.getCategoryId());
                 });
                 limitDetails.setLimitValue(field.getInt(subCategories));
+                categoryLimit += field.getInt(subCategories);
                 logger.info(limitDetails.toString());
                 limitDetailsRepository.save(limitDetails);
             }
+            setOtherLimit(categoryLimit, userData);
         }
         return true;
+    }
+
+    private void setOtherLimit(int categoryLimit, UserData userData) {
+        AccountDetails accountDetails = accountDetailsRepository.findById(userData.getUserID()).orElseThrow(() -> new RuntimeException("Account details not found"));
+        LimitDetailsId limitDetailsId = new LimitDetailsId();
+        limitDetailsId.setUserID(userData.getUserID());
+        ExpenseCategories expenseCategories =  expenseCategoriesRepository.findByCategoryName("other").orElseThrow(() -> new RuntimeException("Category details not found"));
+        limitDetailsId.setCategoryID(expenseCategories.getCategoryId());
+        LimitDetails limitDetails = new LimitDetails();
+        limitDetails.setId(limitDetailsId);
+        limitDetails.setUserDataLD(userData);
+        limitDetails.setExpenseCategoriesID(expenseCategories);
+        limitDetails.setLimitValue(accountDetails.getMonthlyLimit()-categoryLimit);
+        limitDetailsRepository.save(limitDetails);
     }
 
     private boolean setMainConfiguration(MainConfig mainConfig) {
@@ -244,6 +264,19 @@ public class UserService implements UserDetailsService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         return currentDate.format(formatter);
     }
+
+    public boolean addScheduledExpenses(ScheduledExpenses scheduledExpenses) {
+        userRepository.findByUsername(getContextUser().getName()).ifPresent(scheduledExpenses::setUserDataSE);
+        try{
+            scheduledExpensesRepository.save(scheduledExpenses);
+            return true;
+        }catch (Exception e){
+            logger.error("Failed to save scheduled expense", e);
+        }
+        return false;
+    }
+
+
 //    public String getUsername() {
 //        return
 //    }
