@@ -226,7 +226,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String addTransaction(TransactionForm transactionForm) {
-        String response = "ok";
+        String response = "";
         ExpenseCategories expenseCategories = expenseCategoriesRepository.findByCategoryName(transactionForm.getCategoryName()).orElseThrow(() -> new RuntimeException("Category not found"));
         UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
         TransactionHistory transactionHistory = new TransactionHistory(
@@ -246,6 +246,7 @@ public class UserService implements UserDetailsService {
              return "Transaction type issue - action failed";
          try{
              accountDetailsRepository.save(accountDetails);
+             response = "Transaction successful added to the account";
          }catch (Exception e){
              logger.error("Failed to save account details", e);
          }
