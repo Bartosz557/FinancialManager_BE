@@ -21,6 +21,7 @@ public class ScheduledExpenses {
     @ManyToOne
     @JoinColumn(name = "userID")
     private UserData userDataSE;
+    private String name;
     private String date;
     private double amount;
     @Enumerated(EnumType.STRING)

@@ -140,7 +140,7 @@ public class UserService implements UserDetailsService {
             recurringExpenses.setName(expense.getName());
             recurringExpenses.setDate(expense.getDate());
             recurringExpenses.setAmount(expense.getAmount());
-            recurringExpenses.setReminderType(ReminderType.two_reminders);
+            recurringExpenses.setReminderType(expense.getReminderType());
             recurringExpenses.setTransactionStatus(TransactionStatus.PENDING);
             recurringExpensesRepository.save(recurringExpenses);
         }
