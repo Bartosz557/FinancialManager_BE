@@ -3,6 +3,7 @@ package com.example.FinancialManager.database.user;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
 import com.example.FinancialManager.database.accountDetails.LimitDetails;
 import com.example.FinancialManager.database.transactions.RecurringExpenses;
+import com.example.FinancialManager.database.transactions.ScheduledExpenses;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,12 +32,13 @@ public class UserData implements UserDetails {
     private Boolean enabled = true;
 
     @OneToOne(mappedBy = "userDataAD", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private AccountDetails accountDetails;
 
     @OneToMany(mappedBy = "userDataRE", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private List<RecurringExpenses> recurringExpensesList;
+
+    @OneToMany(mappedBy = "userDataSE", cascade = CascadeType.ALL)
+    private List<ScheduledExpenses> scheduledExpenses;
 
     @OneToMany(mappedBy = "userDataLD", cascade = CascadeType.ALL)
     private List<LimitDetails> limitDetails;

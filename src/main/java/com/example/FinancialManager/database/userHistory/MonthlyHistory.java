@@ -18,7 +18,7 @@ public class MonthlyHistory {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long monthId;
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userID")
     private UserData userData;
     private int monthNumber;
     private String archival_expense;

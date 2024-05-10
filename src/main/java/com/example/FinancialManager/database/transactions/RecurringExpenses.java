@@ -19,8 +19,11 @@ public class RecurringExpenses {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long recurring_expense_id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userID")
     private UserData userDataRE;
+    @ManyToOne
+    @JoinColumn(name = "categoryID")
+    private ExpenseCategories expenseCategoriesID;
     private String name;
     private int date;
     private double amount;

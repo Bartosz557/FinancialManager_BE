@@ -19,7 +19,7 @@ import java.util.Date;
 public class TransactionHistory {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private Long transaction_id;
+    private Long transactionId;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserData userData;

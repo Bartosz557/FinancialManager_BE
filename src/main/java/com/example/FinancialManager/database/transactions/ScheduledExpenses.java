@@ -21,6 +21,9 @@ public class ScheduledExpenses {
     @ManyToOne
     @JoinColumn(name = "userID")
     private UserData userDataSE;
+    @ManyToOne
+    @JoinColumn(name = "categoryID")
+    private ExpenseCategories expenseCategoriesID;
     private String name;
     private String date;
     private double amount;

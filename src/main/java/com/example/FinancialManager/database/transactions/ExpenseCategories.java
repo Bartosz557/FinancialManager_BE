@@ -23,6 +23,12 @@ public class ExpenseCategories {
     @OneToMany(mappedBy = "expenseCategoriesID", cascade = CascadeType.ALL)
     private List<LimitDetails> limitDetails;
 
+    @OneToMany(mappedBy = "expenseCategoriesID", cascade = CascadeType.ALL)
+    private List<ScheduledExpenses> scheduledExpenses;
+
+    @OneToMany(mappedBy = "expenseCategoriesID", cascade = CascadeType.ALL)
+    private List<RecurringExpenses> recurringExpenses;
+
     public ExpenseCategories(String category_name) {
         this.categoryName = category_name;
     }
