@@ -20,4 +20,13 @@ public class TransactionHistoryController {
             return ResponseEntity.internalServerError().body("Something went wrong");
         }
     }
+
+    @GetMapping("/monthly/get-data")
+    public ResponseEntity<?> getMonthlyHistoryData(){
+        try {
+            return ResponseEntity.ok(transactionHistoryService.getMonthlyList());
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Something went wrong");
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.example.FinancialManager.History;
 
 import com.example.FinancialManager.AdminCockpit.AdminController;
 import com.example.FinancialManager.database.transactions.TransactionType;
+import com.example.FinancialManager.database.userHistory.MonthlyHistory;
 import com.example.FinancialManager.database.userHistory.TransactionHistory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Locale;
 
 @Setter
 @AllArgsConstructor
@@ -54,5 +59,28 @@ public class TransactionHistoryConverters {
             logger.error("Failed to parse date: {}", inputDate, e);
             return null;
         }
+    }
+
+    public MonthlyHistoryResponse convertToMonthlyObject(MonthlyHistory record) {
+        MonthlyHistoryResponse monthlyHistoryResponse = new MonthlyHistoryResponse();
+        monthlyHistoryResponse.setBalance(record.getArchivalBalance());
+        monthlyHistoryResponse.setSavings(record.getArchivalSavings());
+        monthlyHistoryResponse.setResidualFunds(record.getArchivalResidualFunds());
+        monthlyHistoryResponse.setAmount(record.getArchivalExpense());
+        monthlyHistoryResponse.setDate(getMonth(record.getData()));
+        return monthlyHistoryResponse;
+    }
+
+    private String getMonth(String inputDate) {
+        try {
+            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH);
+            LocalDate date = LocalDate.parse(inputDate, inputFormatter);
+            DateTimeFormatter outputDate = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
+            return date.format(outputDate);
+        } catch (DateTimeParseException e) {
+            logger.error("Failed to parse date: {}", inputDate, e);
+            return null;
+        }
+
     }
 }
