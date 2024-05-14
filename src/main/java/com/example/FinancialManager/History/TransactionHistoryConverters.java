@@ -1,6 +1,7 @@
 package com.example.FinancialManager.History;
 
 import com.example.FinancialManager.AdminCockpit.AdminController;
+import com.example.FinancialManager.database.accountDetails.AccountDetails;
 import com.example.FinancialManager.database.transactions.TransactionType;
 import com.example.FinancialManager.database.userHistory.MonthlyHistory;
 import com.example.FinancialManager.database.userHistory.TransactionHistory;
@@ -81,6 +82,20 @@ public class TransactionHistoryConverters {
             logger.error("Failed to parse date: {}", inputDate, e);
             return null;
         }
+
+    }
+
+    public MonthlyHistory populateMonthlyHistory(AccountDetails accountDetails) {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return new MonthlyHistory(
+                accountDetails.getUserDataAD(),
+                currentDate.format(formatter),
+                accountDetails.getExpenses(),
+                accountDetails.getSavings(),
+                accountDetails.getResidualFunds(),
+                accountDetails.getAccountBalance()
+        );
 
     }
 }

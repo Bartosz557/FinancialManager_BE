@@ -6,7 +6,6 @@ import org.quartz.JobDetail;
 import org.quartz.TriggerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 @Configuration
 public class QuartzConfig {
@@ -15,8 +14,8 @@ public class QuartzConfig {
 
     @Bean
     public JobDetail myJobDetail() {
-        return JobBuilder.newJob(MonthlyResetJob.class)
-                .withIdentity("MonthlyResetJob")
+        return JobBuilder.newJob(DailyCheckJob.class)
+                .withIdentity("DailyCheckJob")
                 .storeDurably()
                 .build();
     }
@@ -26,7 +25,7 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(myJobDetail())
                 .withIdentity("myJobTrigger")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0 0 0 * * ?"))
                 .build();
     }
 

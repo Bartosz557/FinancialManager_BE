@@ -14,6 +14,7 @@ public class InitializeExpenseCategories implements CommandLineRunner {
 
     ExpenseCategoriesRepository expenseCategoriesRepository;
     private static final String[] CATEGORIES = {
+                "piggyBank", // TODO: ignore this index everywhere
                 "groceries",
                 "diningOut",
                 "transport",
@@ -22,7 +23,8 @@ public class InitializeExpenseCategories implements CommandLineRunner {
                 "traveling",
                 "hobby",
                 "miscellaneous",
-                "other"
+                "other",
+
     };
     @Override
     public void run(String... args) {

@@ -119,6 +119,7 @@ public class UserService implements UserDetailsService {
     }
 
     // TODO do smth wit this XDDD
+    // TODO: Add proper validation to this and everywhere else tho
     public boolean setUserConfiguration(ConfigurationForm configurationForm) throws IllegalAccessException {
         boolean status = true;
         if(!setMainConfiguration(configurationForm.getMainConfig()))
@@ -207,8 +208,9 @@ public class UserService implements UserDetailsService {
         accountDetails.setAccountBalance(mainConfig.getAccountBalance());
         accountDetails.setMonthlyLimit(mainConfig.getMonthlyLimit());
         accountDetails.setMonthlyIncome(mainConfig.getMonthlyIncome());
+        accountDetails.setMonthlySavings(0);
         accountDetails.setExpenses(0.0);
-        accountDetails.setSavings(0.0);
+        accountDetails.setSavings(0);
         accountDetails.setResidualFunds(0.0);
         accountDetailsRepository.save(accountDetails);
         return true;

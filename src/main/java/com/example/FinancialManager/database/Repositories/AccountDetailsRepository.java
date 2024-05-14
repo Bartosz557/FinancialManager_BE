@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 public interface AccountDetailsRepository extends JpaRepository<AccountDetails, Long> {
-
+    Optional<AccountDetails> findByUserDataAD(UserData user);
 }

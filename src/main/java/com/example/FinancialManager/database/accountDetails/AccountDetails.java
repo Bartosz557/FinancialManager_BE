@@ -27,13 +27,15 @@ public class AccountDetails implements Serializable {
     private double accountBalance;
     private int monthlyIncome;
     private int monthlyLimit;
+    private int monthlySavings;
     private double expenses; // expenses for current month
-    private double savings; // piggy bank
+    private int savings; // piggy bank
     private double residualFunds; // funds left from previous months
 
-    public AccountDetails(UserData userDataAD, int settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, double savings, double residualFunds) {
+    public AccountDetails(UserData userDataAD, int monthlySavings , int settlementDate, double accountBalance, int monthlyIncome, int monthlyLimit, double expenses, int savings, double residualFunds) {
         this.userDataAD = userDataAD;
         this.settlementDate = settlementDate;
+        this.monthlySavings = monthlySavings;
         this.accountBalance = accountBalance;
         this.monthlyIncome = monthlyIncome;
         this.monthlyLimit = monthlyLimit;
