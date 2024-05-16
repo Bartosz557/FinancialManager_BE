@@ -15,6 +15,7 @@ public class InitializeExpenseCategories implements CommandLineRunner {
     ExpenseCategoriesRepository expenseCategoriesRepository;
     private static final String[] CATEGORIES = {
                 "piggyBank", // TODO: ignore this index everywhere
+                "recurringExpense", //TODO: This too
                 "groceries",
                 "diningOut",
                 "transport",

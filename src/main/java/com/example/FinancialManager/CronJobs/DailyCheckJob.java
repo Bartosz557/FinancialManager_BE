@@ -15,6 +15,5 @@ public class DailyCheckJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("DailyCheckJob");
         cronJobService.monthlyResetJob();
-        // TODO: Planned/recurring expenses reminder service
     }
 }

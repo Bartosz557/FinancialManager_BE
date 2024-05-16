@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Expense {
     private String name;
-    private int date;
-    private int amount;
+    private String date;
+    private double amount;
     private ReminderType reminderType;
+    private String category;
 }

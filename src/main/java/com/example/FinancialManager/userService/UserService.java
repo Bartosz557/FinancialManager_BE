@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
+    //FIXME: change every findByUsername(getContext()) into contextHolder.getPrincipal(). Maslo maslane idk XD
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -52,6 +54,7 @@ public class UserService implements UserDetailsService {
 
     public boolean getConfigurationStatus(String email)
     {
+        // FIXME: get userData to find userData by userData XDDDDDDDDDDDDDDDDDD 🙂🔫
         UserData userData = userRepository.findByUsername(getContextUser().getName()).orElseThrow(() -> new RuntimeException("User not found"));
         return userData.getConfigured();
     }
@@ -139,10 +142,11 @@ public class UserService implements UserDetailsService {
         for( Expense expense : expenses){
             recurringExpenses.setUserDataRE(userData);
             recurringExpenses.setName(expense.getName());
-            recurringExpenses.setDate(expense.getDate());
+            recurringExpenses.setDate(Integer.parseInt(expense.getDate()));
             recurringExpenses.setAmount(expense.getAmount());
             recurringExpenses.setReminderType(expense.getReminderType());
             recurringExpenses.setTransactionStatus(TransactionStatus.PENDING);
+            recurringExpenses.setExpenseCategoriesID(expenseCategoriesRepository.findByCategoryName(expense.getCategory()).orElseThrow(() -> new RuntimeException("Category not found")));
             recurringExpensesRepository.save(recurringExpenses);
         }
         return true;
@@ -268,13 +272,103 @@ public class UserService implements UserDetailsService {
         return currentDate.format(formatter);
     }
 
-    public boolean addScheduledExpenses(ScheduledExpenses scheduledExpenses) {
+    public boolean addScheduledExpenses(Expense expense) {
+        ScheduledExpenses scheduledExpenses = new ScheduledExpenses(expense.getName(), expense.getDate(),expense.getAmount(), expense.getReminderType(), TransactionStatus.PENDING);
+        scheduledExpenses.setExpenseCategoriesID(expenseCategoriesRepository.findByCategoryName(expense.getCategory()).orElseThrow(() -> new RuntimeException("Category not found")));
+
         userRepository.findByUsername(getContextUser().getName()).ifPresent(scheduledExpenses::setUserDataSE);
         try{
             scheduledExpensesRepository.save(scheduledExpenses);
             return true;
         }catch (Exception e){
             logger.error("Failed to save scheduled expense", e);
+        }
+        return false;
+    }
+
+    public ExpenseReminderResponse checkForScheduledExpenses() {
+        UserData userData = (UserData) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<ExpenseReminderData> today = new ArrayList<>();
+        List<ExpenseReminderData> tomorrow = new ArrayList<>();
+        List<ExpenseReminderData> nextWeek = new ArrayList<>();
+        for( ScheduledExpenses scheduledExpense :  scheduledExpensesRepository.findAllByUserDataSEAndTransactionStatus(userData, TransactionStatus.PENDING)){
+            logger.info("checking planned expense");
+            checkExpense(
+                    scheduledExpense.getReminderType(), 
+                    new ExpenseReminderData(
+                            scheduledExpense.getName(), 
+                            scheduledExpense.getExpenseCategoriesID().getCategoryName(), 
+                            scheduledExpense.getAmount()
+                    ), 
+                    scheduledExpense.getDate(), 
+                    new List[]{today, tomorrow, nextWeek}
+            );
+        }
+        for( RecurringExpenses recurringExpense :  recurringExpensesRepository.findAllByUserDataRE(userData)){
+            logger.info("checking recurring expense");
+            checkExpense(
+                    recurringExpense.getReminderType(),
+                    new ExpenseReminderData(
+                            recurringExpense.getName(),
+                            recurringExpense.getExpenseCategoriesID().getCategoryName(),
+                            recurringExpense.getAmount()
+                    ),
+                    setNextRecurringExpenseDate(recurringExpense.getDate()),
+                    new List[]{today, tomorrow, nextWeek}
+            );
+        }
+        return new ExpenseReminderResponse(today,tomorrow,nextWeek);
+    }
+
+    private String setNextRecurringExpenseDate(int date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate expenseDate = LocalDate.now().withDayOfMonth(date);
+        if (date < LocalDate.now().getDayOfMonth()) {
+            expenseDate = expenseDate.plusMonths(1);
+        }
+        return expenseDate.format(formatter);
+    }
+
+    private void checkExpense(ReminderType reminderType, ExpenseReminderData expenseReminderData, String date, List<ExpenseReminderData>[] reminderList) {
+        if(reminderType!=ReminderType.do_not_remind){
+                if(checkTheDate(date,0)){
+                    reminderList[0].add(expenseReminderData);
+                    return;
+                }
+                if(reminderType==ReminderType.two_reminders){
+                    if(checkTheDate(date,1)) {
+                        reminderList[1].add(expenseReminderData);
+                        logger.info("added reminder two");
+                    }
+                } else if (reminderType==ReminderType.three_reminders) {
+                    if(checkTheDate(date,7)){
+                        reminderList[2].add(expenseReminderData);
+                        return;
+                    }
+                    if(checkTheDate(date,1))
+                        reminderList[1].add(expenseReminderData);
+                }
+            }
+    }
+
+
+    private void addExpenseReminder(List<ExpenseReminderData> list, ScheduledExpenses scheduledExpense) {
+        list.add(new ExpenseReminderData(
+
+        ));
+    }
+
+    private boolean checkTheDate(String date, int days) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate today = LocalDate.now();
+        LocalDate reminderDate;
+        try {
+            reminderDate = LocalDate.parse(date, formatter);
+            logger.info("Reminder date: "+ reminderDate + "today: " + today.plusDays(days));
+            logger.info(String.valueOf(reminderDate.isEqual(today.plusDays(days))));
+            return reminderDate.isEqual(today.plusDays(days));
+        } catch (DateTimeParseException e) {
+            logger.info("Invalid date format: " + date);
         }
         return false;
     }

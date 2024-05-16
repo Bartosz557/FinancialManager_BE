@@ -1,10 +1,9 @@
 package com.example.FinancialManager.CronJobs;
 
 import com.example.FinancialManager.History.TransactionHistoryConverters;
-import com.example.FinancialManager.database.Repositories.AccountDetailsRepository;
-import com.example.FinancialManager.database.Repositories.MonthlyHistoryRepository;
-import com.example.FinancialManager.database.Repositories.UserRepository;
+import com.example.FinancialManager.database.Repositories.*;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
+import com.example.FinancialManager.database.transactions.ScheduledExpenses;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
 import com.example.FinancialManager.database.userHistory.MonthlyHistory;
@@ -29,16 +28,16 @@ public class CronJobService {
     private final MonthlyHistoryRepository monthlyHistoryRepository;
     private final AccountDetailsRepository accountDetailsRepository;
     private final TransactionHistoryConverters transactionHistoryConverters;
+    private final RecurringExpensesRepository recurringExpensesRepository;
+    private final ScheduledExpensesRepository scheduledExpensesRepository;
     public void monthlyResetJob(){
-        List<UserData> userList = userRepository.findAll();
+        List<UserData> userList = userRepository.findAllByUserRole(UserRole.USER);
         for( UserData user: userList){
-            if(user.getUserRole() == UserRole.USER){
-                AccountDetails accountDetails = accountDetailsRepository.findByUserDataAD(user).orElseThrow(() -> new RuntimeException("User account details not found"));
-                if(accountDetails.getSettlementDate()!=LocalDate.now().getDayOfMonth())
-                    continue;
-                if (addMonthlyHistory(accountDetails))
-                    userSettlement(accountDetails);
-            }
+            AccountDetails accountDetails = accountDetailsRepository.findByUserDataAD(user).orElseThrow(() -> new RuntimeException("User account details not found"));
+            if(accountDetails.getSettlementDate()!=LocalDate.now().getDayOfMonth())
+                continue;
+            if (addMonthlyHistory(accountDetails))
+                userSettlement(accountDetails);
         }
 
     }

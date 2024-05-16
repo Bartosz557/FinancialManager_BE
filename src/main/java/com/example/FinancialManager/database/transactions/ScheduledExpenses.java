@@ -14,7 +14,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-public class ScheduledExpenses {
+public class ScheduledExpenses{
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long scheduled_expense_id;
@@ -40,7 +40,8 @@ public class ScheduledExpenses {
         this.transactionStatus = transactionStatus;
     }
 
-    public ScheduledExpenses(String date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
+    public ScheduledExpenses(String name, String date, double amount, ReminderType reminderType, TransactionStatus transactionStatus) {
+        this.name = name;
         this.date = date;
         this.amount = amount;
         this.reminderType = reminderType;

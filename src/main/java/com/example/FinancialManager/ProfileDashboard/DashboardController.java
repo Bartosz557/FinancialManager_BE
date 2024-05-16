@@ -49,9 +49,9 @@ public class DashboardController {
         }
     }
     @PostMapping("/add-scheduled-expense")
-    public ResponseEntity<?> addScheduledExpense(@RequestBody ScheduledExpenses scheduledExpenses){
+    public ResponseEntity<?> addScheduledExpense(@RequestBody Expense expense){
         try {
-            return ResponseEntity.ok(userService.addScheduledExpenses(scheduledExpenses));
+            return ResponseEntity.ok(userService.addScheduledExpenses(expense));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Something went wrong");
         }
@@ -61,6 +61,15 @@ public class DashboardController {
     public ResponseEntity<?> getCategories() {
         try {
             return ResponseEntity.ok(transactionService.getAllCategories());
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body("Cannot retrieve category names");
+        }
+    }
+
+    @GetMapping("/check-for-scheduled-expenses")
+    public ResponseEntity<?> getScheduledExpenses() {
+        try {
+            return ResponseEntity.ok(userService.checkForScheduledExpenses());
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Cannot retrieve category names");
         }
