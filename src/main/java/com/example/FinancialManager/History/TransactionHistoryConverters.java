@@ -77,6 +77,7 @@ public class TransactionHistoryConverters {
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH);
             LocalDate date = LocalDate.parse(inputDate, inputFormatter);
             DateTimeFormatter outputDate = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
+            logger.info(date.format(outputDate));
             return date.format(outputDate);
         } catch (DateTimeParseException e) {
             logger.error("Failed to parse date: {}", inputDate, e);

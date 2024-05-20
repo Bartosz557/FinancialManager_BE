@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QuartzConfig {
 
-    // Other bean definitions as before...
-
     @Bean
     public JobDetail myJobDetail() {
         return JobBuilder.newJob(DailyCheckJob.class)
@@ -26,8 +24,7 @@ public class QuartzConfig {
                 .forJob(myJobDetail())
                 .withIdentity("myJobTrigger")
                 .withSchedule(CronScheduleBuilder.cronSchedule("0 0 0 * * ?"))
+//                .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?")) // 5 seconds period test schedule
                 .build();
     }
-
-    // Other beans as needed...
 }

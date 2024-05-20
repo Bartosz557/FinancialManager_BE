@@ -31,7 +31,7 @@ public class InitializeTestUser implements CommandLineRunner{
         if (userRepository.findByUsername("TestUser").isEmpty()) {
             UserData userData = new UserData("TestUser", "user@mail.com", "123", UserRole.USER, true, true);
             userService.signUpUser(userData);
-            AccountDetails accountDetails = new AccountDetails(userData,0,11,1234.0,1000,2000,1400.0,50,30.0);
+            AccountDetails accountDetails = new AccountDetails(userData,0,18,1234.0,1000,2000,1400.0,50,30.0);
             try{
                 accountDetailsRepository.save(accountDetails);
             } catch (Exception e){
