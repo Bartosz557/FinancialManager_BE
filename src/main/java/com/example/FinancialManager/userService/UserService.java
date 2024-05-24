@@ -146,7 +146,7 @@ public class UserService implements UserDetailsService {
             recurringExpenses.setAmount(expense.getAmount());
             recurringExpenses.setReminderType(expense.getReminderType());
             recurringExpenses.setTransactionStatus(TransactionStatus.PENDING);
-            recurringExpenses.setExpenseCategoriesID(expenseCategoriesRepository.findByCategoryName(expense.getCategory()).orElseThrow(() -> new RuntimeException("Category not found")));
+            recurringExpenses.setExpenseCategoriesID(expenseCategoriesRepository.findByCategoryName(expense.getCategory()).orElseThrow(() -> new RuntimeException("Category not found: "+ expense.getCategory())));
             recurringExpensesRepository.save(recurringExpenses);
         }
         return true;

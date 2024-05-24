@@ -15,9 +15,15 @@ public class TransactionService {
     ExpenseCategoriesRepository expenseCategoriesRepository;
     public List<String> getAllCategories() {
         List<String>  categoryNames = new ArrayList<>();
+        String name;
         List<ExpenseCategories> categories= expenseCategoriesRepository.findAll();
         for( ExpenseCategories category : categories){
-            categoryNames.add(category.getCategoryName());
+            name=category.getCategoryName();
+            if(!name.equals("recurringExpense") && !name.equals("piggyBank")) {
+                if(name.equals("DiningOut"))
+                    name="Dining out";
+                categoryNames.add(name);
+            }
         }
         Collections.sort(categoryNames);
         return categoryNames;
