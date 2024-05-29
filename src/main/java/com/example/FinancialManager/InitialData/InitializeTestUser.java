@@ -3,7 +3,6 @@ package com.example.FinancialManager.InitialData;
 import com.example.FinancialManager.database.Repositories.AccountDetailsRepository;
 import com.example.FinancialManager.database.Repositories.UserRepository;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
-import com.example.FinancialManager.database.transactions.ExpenseCategories;
 import com.example.FinancialManager.database.user.UserData;
 import com.example.FinancialManager.database.user.UserRole;
 import com.example.FinancialManager.userService.UserService;
@@ -23,19 +22,19 @@ public class InitializeTestUser implements CommandLineRunner{
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final AccountDetailsRepository accountDetailsRepository;
     @Override
-    @Transactional // Fixing the detached persistence in the second operation UserData
+    @Transactional // Fixing the detached persistence in the second operation
     public void run(String... args) {
         initializeUser();
     }
     public void initializeUser() {
         if (userRepository.findByUsername("TestUser").isEmpty()) {
-            UserData userData = new UserData("TestUser", "user@mail.com", "123", UserRole.USER, true, true);
+            UserData userData = new UserData("Bartosz", "bartosz@gmail.com", "123", UserRole.USER, true, true);
             userService.signUpUser(userData);
-            AccountDetails accountDetails = new AccountDetails(userData,0,18,1234.0,1000,2000,1400.0,50,30.0);
+            AccountDetails accountDetails = new AccountDetails(userData,100,18,4865.75,1000,2300,1600,310,91);
             try{
                 accountDetailsRepository.save(accountDetails);
             } catch (Exception e){
-                logger.error("Failed to save account details", e);
+                logger.error("Failed to save account details for initial user", e);
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.FinancialManager.userService;
 
+import com.example.FinancialManager.History.TransactionHistoryConverters;
 import com.example.FinancialManager.ProfileDashboard.TransactionForm;
 import com.example.FinancialManager.database.Repositories.*;
 import com.example.FinancialManager.database.accountDetails.AccountDetails;
@@ -27,6 +28,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class UserService implements UserDetailsService {
     private final RecurringExpensesRepository recurringExpensesRepository;
     private final TransactionHistoryRepository transactionHistoryRepository;
     private final ScheduledExpensesRepository scheduledExpensesRepository;
+    private final TransactionHistoryConverters transactionHistoryConverters;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -371,6 +374,46 @@ public class UserService implements UserDetailsService {
             logger.info("Invalid date format: " + date);
         }
         return false;
+    }
+
+    public List<UpcomingPaymentsDTO> getAllUpcomingPayments() {
+        UserData userData = (UserData) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<UpcomingPaymentsDTO> upcomingPaymentsList = new ArrayList<>();
+        List<RecurringExpenses> recurringExpenses = recurringExpensesRepository.findAllByUserDataREAndTransactionStatus(userData, TransactionStatus.PENDING);
+        for( RecurringExpenses expense : recurringExpenses){
+            upcomingPaymentsList.add(new UpcomingPaymentsDTO(
+                    transactionHistoryConverters.convertDateFormat(setNextRecurringExpenseDate(expense.getDate())),
+                    expense.getAmount(),
+                    expense.getName(),
+                    expense.getReminderType()
+                    ));
+        }
+        List<ScheduledExpenses> scheduledExpenses = scheduledExpensesRepository.findAllByUserDataSEAndTransactionStatus(userData, TransactionStatus.PENDING);
+        for( ScheduledExpenses expense : scheduledExpenses){
+            if(isPaymentInWithin(expense.getDate())){
+                upcomingPaymentsList.add(new UpcomingPaymentsDTO(
+                        transactionHistoryConverters.convertDateFormat(expense.getDate()),
+                        expense.getAmount(),
+                        expense.getName(),
+                        expense.getReminderType()
+                ));
+            }
+        }
+        return upcomingPaymentsList;
+    }
+
+    private boolean isPaymentInWithin(String targetDateString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            LocalDate targetDate = LocalDate.parse(targetDateString, formatter);
+            LocalDate today = LocalDate.now();
+            long daysBetween = ChronoUnit.DAYS.between(today, targetDate);
+            logger.info("days between is equal:" + daysBetween);
+            return daysBetween < 30;
+        } catch (DateTimeParseException e) {
+            logger.error("Error while calculating date period: " + e);
+            return false;
+        }
     }
 
 

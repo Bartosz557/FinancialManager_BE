@@ -14,4 +14,5 @@ import java.util.List;
 public interface ScheduledExpensesRepository extends JpaRepository<ScheduledExpenses, Long> {
 
     List<ScheduledExpenses> findAllByUserDataSEAndTransactionStatus(UserData userData, TransactionStatus status);
+
 }

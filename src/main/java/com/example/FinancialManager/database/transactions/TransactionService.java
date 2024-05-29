@@ -19,13 +19,15 @@ public class TransactionService {
         List<ExpenseCategories> categories= expenseCategoriesRepository.findAll();
         for( ExpenseCategories category : categories){
             name=category.getCategoryName();
-            if(!name.equals("recurringExpense") && !name.equals("piggyBank")) {
-                if(name.equals("DiningOut"))
-                    name="Dining out";
+            if(!name.equalsIgnoreCase("recurringExpense") && !name.equalsIgnoreCase("piggyBank")) {
                 categoryNames.add(name);
             }
         }
-        Collections.sort(categoryNames);
+        categoryNames.sort((a, b) -> {
+            if (a.equalsIgnoreCase("other")) return 1;
+            else if (b.equalsIgnoreCase("other")) return -1;
+            else return a.compareTo(b);
+        });
         return categoryNames;
     }
 }

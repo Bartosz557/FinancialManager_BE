@@ -50,7 +50,7 @@ public class TransactionHistoryConverters {
             throw new IllegalArgumentException("Unknown transaction type: " + transactionType);
     }
 
-    private String convertDateFormat(String inputDate) {
+    public String convertDateFormat(String inputDate) {
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy");
             Date date = inputFormat.parse(inputDate);
