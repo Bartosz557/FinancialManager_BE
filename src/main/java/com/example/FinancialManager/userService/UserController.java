@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/profile/get-username")
-    public ResponseEntity<?> getUsername(){
+    public ResponseEntity<String> getUsername(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             UserData userDetails = (UserData) authentication.getPrincipal();
