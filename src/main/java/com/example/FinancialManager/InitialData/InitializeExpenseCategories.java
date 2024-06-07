@@ -1,12 +1,10 @@
 package com.example.FinancialManager.InitialData;
 
-import com.example.FinancialManager.database.Repositories.ExpenseCategoriesRepository;
-import com.example.FinancialManager.database.transactions.ExpenseCategories;
+import com.example.FinancialManager.DAO.ExpenseCategoriesRepository;
+import com.example.FinancialManager.DataModel.ExpenseCategories;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @AllArgsConstructor

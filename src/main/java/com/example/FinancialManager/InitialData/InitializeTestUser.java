@@ -1,11 +1,11 @@
 package com.example.FinancialManager.InitialData;
 
-import com.example.FinancialManager.database.Repositories.AccountDetailsRepository;
-import com.example.FinancialManager.database.Repositories.UserRepository;
-import com.example.FinancialManager.database.accountDetails.AccountDetails;
-import com.example.FinancialManager.database.user.UserData;
-import com.example.FinancialManager.database.user.UserRole;
-import com.example.FinancialManager.userService.UserService;
+import com.example.FinancialManager.DAO.AccountDetailsRepository;
+import com.example.FinancialManager.DAO.UserRepository;
+import com.example.FinancialManager.DataModel.AccountDetails;
+import com.example.FinancialManager.DataModel.UserData;
+import com.example.FinancialManager.DataModel.EnumTypes.UserRole;
+import com.example.FinancialManager.WebServices.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
